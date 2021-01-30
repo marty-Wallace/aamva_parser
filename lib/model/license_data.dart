@@ -1,24 +1,32 @@
 
+import 'card_type.dart';
+import 'height.dart';
+import 'sex.dart';
+import 'weight.dart';
+
 class LicenseData {
   String licenseNumber;
-  String expiry;
+  DateTime issueDate;
+  DateTime expiry;
+  String country;
   String state;
   String city;
   String postal;
   List<String> address;
   String firstName;
   String lastName;
-  String secondName;
+  String middleName;
   String restrictions;
   String endorsements;
-  String height;
-  String weight;
+  Height height;
+  Weight weight;
   String hair;
   String eyes;
-  String sex;
+  Sex sex;
   String suffix;
   String prefix;
-  String dob;
+  DateTime dob;
   String issueIdentifier;
-
+  String licenseClass;
+  CardType cardType;
 }

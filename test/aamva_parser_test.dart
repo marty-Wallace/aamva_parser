@@ -1,7 +1,11 @@
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:aamva_parser/aamva_parser.dart';
+import 'package:aamva_parser/model/card_type.dart';
+import 'package:aamva_parser/model/height.dart';
+import 'package:aamva_parser/model/sex.dart';
+import 'package:aamva_parser/model/weight.dart';
+import 'package:test/test.dart';
 
+// faked data or data from jurisdictional authorities
 var pdf417 = {
   "aamva_v1": '@\n\x1e\rANSI 6360000102DL00390188ZV02270031DLDAQ0123456789ABC\nDAAPUBLIC,JOHN,Q\nDAG123 MAIN STREET\nDAIANYTOWN\nDAJVA\nDAK123459999  \nDARDM  \nDAS       \nDAT     \nDAU509\nDAW175\nDAYBL \nDAZBR \nDBA20011201\nDBB19761123\nDBCM\nDBD19961201\rZVZVAJURISICTIONDEFINEDELEMENT\r\\928\\111\\100\\180\\605\\739\\922\r\n',
   "aamva_v2": '@\n\x1e\rANSI 6360000102DL00390188ZV02270031DLDAQ0123456789ABC\nDAAPUBLIC,JOHN,Q\nDAG123 MAIN STREET\nDAIANYTOWN\nDAJVA\nDAK123459999  \nDARDM  \nDAS       \nDAT     \nDAU509\nDAW175\nDAYBL \nDAZBR \nDBA20011201\nDBB19761123\nDBCM\nDBD19961201\rZVZVAJURISICTIONDEFINEDELEMENT\r\\928\\111\\100\\180\\605\\739\\922\r\n',
@@ -20,16 +24,31 @@ var pdf417 = {
   "oh_missing_record_separator": "@\n\rANSI 636023080102DL00410280ZO03210024DLDBA05262020\nDCSLASTNAME\nDACFIRSTNAME\nDADW\nDBD05132016\nDBB05261991\nDBC1\nDAYBLU\nDAU072 IN\nDAG5115 TEST DR\nDAIPENNSITUCKY\nDAJOH\nDAK606061337  \nDAQTG834904\nDCF2520UQ7248040000\nDCGUSA\nDDEN\nDDFN\nDDGN\nDAZBRO\nDCIUS,CALIFORNIA\nDCJNONE\nDCUNONE\nDCE4\nDDAM\nDDB12042013\nDAW170\nDDK1\nDCAD\nDCBB\nDCDNONE\rZOZOAY\nZOBY\nZOE05262020\r",
 };
 
+// faked data or data from jurisdictional authorities
 var magstripe = {
   "tx": '%TXAUSTIN^DOE\$JOHN^12345 SHERBOURNE ST^?;63601538774194=150819810101?#" 78729      C               1505130BLKBLK?',
   "fl": '%FLDELRAY BEACH^DOE\$JOHN\$^4818 S FEDERAL BLVD^           ?;6360100462172082009=2101198701010=?#! 33435      I               1600                                   ECCECC00000?',
   "fl2": '%FLDELRAY BEACH^JURKOV\$ROMAN\$^4818 N CLASSICAL BLVD^                            ?;6360100462172082009=2101198701010=?#! 33435      I               1600                                   ECCECC00000',
-  "bc": '%BCKELOWNA^WALLACE,\$MARTIN VERNON^1763 FAKE RD\$KELOWNA BC  V1V 1E6^?;6360287361521=250619920101=?_%0AV1V1E6                     M191100BRNGRN                           <*,A.9O1H8?'
+  "bc": '%BCKELOWNA^WILLY,\$MARVIN NERVON^1763 FAKE RD\$KELOWNA BC  V1Y 2P6^?;6360287290172=250619920101=?_%0AV1Y2P6                     M191100BRNGRN                           <*,A.9O1H8?'
 };
 
 
 void main() {
   AAMVAParser parser = AAMVAParser();
+  test('Should throw Unimplemented for unsupported versions', () {
+
+    expect(() => parser.decode(pdf417['oh']), throwsA(TypeMatcher<UnimplementedError>()));
+    expect(() => parser.decode(pdf417['aamva_v1']), throwsA(TypeMatcher<UnimplementedError>()));
+    expect(() => parser.decode(pdf417['aamva_v2']), throwsA(TypeMatcher<UnimplementedError>()));
+    expect(() => parser.decode(pdf417['ga']), throwsA(TypeMatcher<UnimplementedError>()));
+    expect(() => parser.decode(pdf417['indiana']), throwsA(TypeMatcher<UnimplementedError>()));
+    expect(() => parser.decode(pdf417['ca']), throwsA(TypeMatcher<UnimplementedError>()));
+    expect(() => parser.decode(pdf417['ny']), throwsA(TypeMatcher<UnimplementedError>()));
+    expect(() => parser.decode(pdf417['sc']), throwsA(TypeMatcher<UnimplementedError>()));
+    expect(() => parser.decode(pdf417['oh_missing_record_separator'], format: Format.PDF417), throwsA(TypeMatcher<UnimplementedError>()));
+
+  });
+
   test('Should scan a valid BC DL', () {
 
     var licenseData = magstripe['bc'];
@@ -38,23 +57,53 @@ void main() {
     expect(cust, isNotNull);
     expect(cust.city, "KELOWNA");
     expect(cust.state, "BC");
-    expect(cust.firstName, "MARTIN VERNON");
-    expect(cust.lastName, "WALLACE");
-    expect(cust.postal, "V1V1E6");
-    expect(cust.licenseNumber, "7361521");
+    expect(cust.firstName, "MARVIN NERVON");
+    expect(cust.lastName, "WILLY");
+    expect(cust.postal, "V1Y2P6");
+    expect(cust.licenseNumber, "7290172");
     expect(cust.address[0], "1763 FAKE RD");
-    expect(cust.dob, "19920101");
-    expect(cust.expiry, "202506");
-    expect(cust.height, "191");
-    expect(cust.weight, "100");
+    expect(cust.dob, DateTime(1992, 1, 1));
+    expect(cust.expiry, DateTime(2025, 6, 30));
+    expect(cust.height, Height(191, HeightUnit.CM));
+    expect(cust.weight, Weight(100, WeightUnit.KG));
     expect(cust.eyes, "GRN");
     expect(cust.hair, "BRN");
-    expect(cust.sex, "M");
+    expect(cust.sex, Sex.MALE);
     expect(cust.endorsements, "");
     expect(cust.issueIdentifier, "636028");
     expect(cust.restrictions, "");
     expect(cust.prefix, isNull);
     expect(cust.suffix, isNull);
+
+  });
+
+  test("Should scan a wa edl", () {
+
+    var licenseData = pdf417['wa_edl'];
+    var cust = parser.decode(licenseData, format: Format.PDF417);
+
+    // expect(cust.document?, 'OREALDD521DSL1083014J1459')
+    expect(cust.issueIdentifier, '636045');
+    expect(cust.address[0], '2600 MARTIN WAY');
+    expect(cust.city, 'OLYMPIA');
+    expect(cust.licenseClass ,'NONE');
+    expect(cust.dob, DateTime(1948, 3, 10));
+    expect(cust.endorsements, 'NONE');
+    expect(cust.eyes, 'BLU');
+    expect(cust.firstName, 'DABE');
+    expect(cust.middleName, 'DEE');
+    expect(cust.lastName, 'O REALTEST');
+    expect(cust.prefix, isNull);
+    expect(cust.hair, isNull);
+    expect(cust.height, Height(70, HeightUnit.IN));
+    expect(cust.expiry, DateTime(2013, 3, 10));
+    expect(cust.issueDate, DateTime(2008, 10, 27));
+    expect(cust.licenseNumber, 'OREALDD521DS');
+    expect(cust.restrictions, 'NONE');
+    expect(cust.sex, Sex.MALE);
+    expect(cust.state, 'WA');
+    expect(cust.suffix, 'V');
+    expect(cust.weight, Weight(175, WeightUnit.LBS));
 
   });
 
@@ -66,8 +115,8 @@ void main() {
     expect(dl.lastName, 'DOE');
     expect(dl.city, 'DELRAY BEACH');
     expect(dl.issueIdentifier, '636010');
-    expect(dl.dob, "19870101");
-    expect(dl.expiry, "202101");
+    expect(dl.dob, DateTime(1987, 1, 1));
+    expect(dl.expiry, DateTime(2021, 1, 31));
   });
 
   test("Should scan a valid TX DL", () {
@@ -78,8 +127,8 @@ void main() {
     expect(dl.lastName, 'DOE');
     expect(dl.city, 'AUSTIN');
     expect(dl.issueIdentifier, '636015');
-    expect(dl.dob, "19810101");
-    expect(dl.expiry, "201508");
+    expect(dl.dob, DateTime(1981, 1, 1));
+    expect(dl.expiry, DateTime(2015, 8, 31));
   });
 
   test("Should scan a valid FL DL 2", () {
@@ -92,10 +141,73 @@ void main() {
     expect(dl.address[0], "4818 N CLASSICAL BLVD");
     expect(dl.city, 'DELRAY BEACH');
     expect(dl.issueIdentifier, '636010');
-    expect(dl.dob, "19870101");
-    expect(dl.expiry, "202101");
+    expect(dl.dob, DateTime(1987, 1, 1));
+    expect(dl.expiry, DateTime(2021, 1, 31));
   });
 
+  test("Should scan a valid ON DL", () {
+    var on = '''@\n\rANSI 636012030001DL00000367DLDCAG   \nDCBX         \nDCDNONE \nDBA20170914\nDCSPIECES,                                 \nDCTREESES,K                                                                        \nDBD20120524\nDBB19410714\nDBC1\nDAYNONE\nDAU150 cm\nDAG9206-12 FAKEDVILLE AVE,            \nDAITORONTO             \nDAJON\nDAKM6S 3B1    \nDAQP3291-52723-10723\nDCFCH3271654\nDCGCAN\nDCHNONE\nDCK*3312921*''';
+    var parser = AAMVAParser();
+    var dl = parser.decode(on);
+
+    expect(dl, isNotNull);
+    expect(dl.country, "CAN");
+    expect(dl.firstName, "REESES");
+    expect(dl.lastName, "PIECES");
+    expect(dl.city, 'TORONTO');
+    expect(dl.height, Height(150, HeightUnit.CM));
+    expect(dl.weight, isNull);
+    expect(dl.country, 'CAN');
+    expect(dl.middleName, 'K');
+    expect(dl.address[0], '9206-12 FAKEDVILLE AVE,');
+    expect(dl.postal, 'M6S 3B1');
+    expect(dl.state, 'ON');
+    expect(dl.dob, new DateTime(1941, 7, 14));
+    expect(dl.licenseNumber, 'P3291-52723-10723');
+    expect(dl.issueIdentifier, '636012');
+    expect(dl.cardType, CardType.DL);
+    expect(dl.expiry, new DateTime(2017, 9, 14));
+    expect(dl.issueDate, new DateTime(2012, 5, 24));
+
+  });
+
+  test("Should scan a v9 ON License ", () {
+  String testData = '''@\n\rANSI 636012090002DL00410219ZO02600055DLDCAG\nDCB\nDCD\nDBA20251201\nDCSARR\nDACJAMES\nDADD\nDBD20201006\nDBB19811201\nDBC1\nDAYUNK\nDAU170 cm\nDAG333-19 FAKEVIEW ROAD\nDAIFAKECITYY\nDAJON\nDAKM5V3R7     \nDAQD32482252811201\nDCFGT9632237\nDCGCAN\nDDEN\nDDFN\nDDGN\nDCK*7581030*\nZOZOAARR,JAMES,D\nZOBY\nZOC\nZOD\nZOE\nZOZD2158-62528-11201\r''';
+  var parser = AAMVAParser();
+  var dl = parser.decode(testData);
+
+  expect(dl, isNotNull);
+  expect(dl.firstName, "JAMES");
+  expect(dl.lastName, "ARR");
+  expect(dl.middleName, "D");
+  expect(dl.address[0], "333-19 FAKEVIEW ROAD");
+  expect(dl.city, "FAKECITYY");
+  expect(dl.state, "ON");
+  expect(dl.postal, "M5V3R7");
+  expect(dl.expiry, DateTime(2025, 12, 01));
+  expect(dl.dob, DateTime(1981, 12, 01));
+  expect(dl.licenseNumber, "D32482252811201");
+  expect(dl.licenseClass, 'G');
+  expect(dl.cardType, CardType.DL);
+  expect(dl.restrictions, isNull);
+  expect(dl.height, Height(170, HeightUnit.CM));
+  expect(dl.issueDate, DateTime(2020, 10, 06));
+  expect(dl.endorsements, isNull);
+
+});
+
+  test('test silly DateTime trick', () {
+    var d = DateTime(2020, 13, 1).add(Duration(days: -1));
+    expect(d.day, 31);
+    expect(d.month, 12);
+    expect(d.year, 2020);
+
+    d = DateTime(2021, 03, 1).add(Duration(days: -1));
+    expect(d.year, 2021);
+    expect(d.month, 2);
+    expect(d.day, 28);
+
+  });
 
 
 

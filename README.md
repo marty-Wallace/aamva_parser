@@ -2,6 +2,8 @@
 
 Scans an AAMVA drivers license
 
+Working off of this python library: https://github.com/rechner/py-aamva
+
 ## Getting Started
 
 This project is a starting point for a Dart
