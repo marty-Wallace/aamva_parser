@@ -45,8 +45,11 @@ void main() {
     expect(() => parser.decode(pdf417['ca']), throwsA(TypeMatcher<UnimplementedError>()));
     expect(() => parser.decode(pdf417['ny']), throwsA(TypeMatcher<UnimplementedError>()));
     expect(() => parser.decode(pdf417['sc']), throwsA(TypeMatcher<UnimplementedError>()));
-    expect(() => parser.decode(pdf417['oh_missing_record_separator'], format: Format.PDF417), throwsA(TypeMatcher<UnimplementedError>()));
 
+  });
+
+  test('Should throw FormatException when missing record separator', () {
+    expect(() => parser.decode(pdf417['oh_missing_record_separator'], format: Format.PDF417), throwsA(TypeMatcher<FormatException>()));
   });
 
   test('Should scan a valid BC DL', () {
