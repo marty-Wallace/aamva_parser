@@ -38,8 +38,6 @@ class BarcodeDecoderV3 extends BarcodeDecoder {
   @override
   LicenseData decode(Map<String, String> fields) {
 
-    bool imperialUnits = false;
-
     var country = fields['DCG'];
     checkCountry(country);
 
@@ -288,7 +286,7 @@ class BarcodeDecoderV9 extends BarcodeDecoder {
     var state = fields['DAJ'];
     var licenseNumber = fields['DAQ'];
     var postal = fields['DAK'];
-    var document = fields['DCF'];
+    // var document = fields['DCF'];
 
     var data = LicenseData();
     data.country = country?.trim();
