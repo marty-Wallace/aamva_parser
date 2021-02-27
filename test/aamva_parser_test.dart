@@ -37,14 +37,14 @@ void main() {
   AAMVAParser parser = AAMVAParser();
   test('Should throw Unimplemented for unsupported versions', () {
 
-    expect(() => parser.decode(pdf417['oh']), throwsA(TypeMatcher<UnimplementedError>()));
-    expect(() => parser.decode(pdf417['aamva_v1']), throwsA(TypeMatcher<UnimplementedError>()));
-    expect(() => parser.decode(pdf417['aamva_v2']), throwsA(TypeMatcher<UnimplementedError>()));
-    expect(() => parser.decode(pdf417['ga']), throwsA(TypeMatcher<UnimplementedError>()));
-    expect(() => parser.decode(pdf417['indiana']), throwsA(TypeMatcher<UnimplementedError>()));
-    expect(() => parser.decode(pdf417['ca']), throwsA(TypeMatcher<UnimplementedError>()));
-    expect(() => parser.decode(pdf417['ny']), throwsA(TypeMatcher<UnimplementedError>()));
-    expect(() => parser.decode(pdf417['sc']), throwsA(TypeMatcher<UnimplementedError>()));
+    expect(() => parser.decode(pdf417['oh']), throwsA(TypeMatcher<FormatException>()));
+    expect(() => parser.decode(pdf417['aamva_v1']), throwsA(TypeMatcher<FormatException>()));
+    expect(() => parser.decode(pdf417['aamva_v2']), throwsA(TypeMatcher<FormatException>()));
+    expect(() => parser.decode(pdf417['ga']), throwsA(TypeMatcher<FormatException>()));
+    expect(() => parser.decode(pdf417['indiana']), throwsA(TypeMatcher<FormatException>()));
+    expect(() => parser.decode(pdf417['ca']), throwsA(TypeMatcher<FormatException>()));
+    expect(() => parser.decode(pdf417['ny']), throwsA(TypeMatcher<FormatException>()));
+    expect(() => parser.decode(pdf417['sc']), throwsA(TypeMatcher<FormatException>()));
 
   });
 
@@ -60,7 +60,8 @@ void main() {
     expect(cust, isNotNull);
     expect(cust.city, "KELOWNA");
     expect(cust.state, "BC");
-    expect(cust.firstName, "MARVIN NERVON");
+    expect(cust.firstName, "MARVIN");
+    expect(cust.middleName, "NERVON");
     expect(cust.lastName, "WILLY");
     expect(cust.postal, "V1Y2P6");
     expect(cust.licenseNumber, "7290172");
@@ -171,7 +172,6 @@ void main() {
     expect(dl.cardType, CardType.DL);
     expect(dl.expiry, new DateTime(2017, 9, 14));
     expect(dl.issueDate, new DateTime(2012, 5, 24));
-
   });
 
   test("Should scan a v9 ON License ", () {

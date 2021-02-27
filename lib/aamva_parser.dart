@@ -141,7 +141,7 @@ class AAMVAParser {
 
     if (version == 0 || version == 1) {
       // do some stuff
-      throw new UnimplementedError("Version 1 of AAMVA spec and before are unsupported");
+      throw new FormatException("Version 1 of AAMVA spec and before are unsupported");
     } else if (version == 2 || version > 9) {
       throw new FormatException("Unsupported AAMVA version");
     }
@@ -280,6 +280,11 @@ class AAMVAParser {
     var middle;
     if (name.length == 3) {
       middle = name[2];
+    } else {
+      if(name[1].contains(" ")) {
+        middle = name[1].split(" ").sublist(1).join(" ");
+        name[1] = name[1].split(" ")[0];
+      }
     }
     name[0] = trim(name[0], ',');
 

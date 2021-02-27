@@ -30,7 +30,7 @@ abstract class BarcodeDecoder {
 class BarcodeDecoderV1 extends BarcodeDecoder {
   @override
   LicenseData decode(Map<String, String> fields) {
-    throw new UnimplementedError("Version 1 has not been implemented yet");
+    throw new FormatException("Version 1 has not been implemented yet");
   }
 }
 
@@ -177,35 +177,35 @@ class BarcodeDecoderV3 extends BarcodeDecoder {
 class BarcodeDecoderV4 extends BarcodeDecoder {
   @override
   LicenseData decode(Map<String, String> fields) {
-    throw new UnimplementedError("Version 4 has not been implemented yet");
+    throw new FormatException("Version 4 has not been implemented yet");
   }
 }
 
 class BarcodeDecoderV5 extends BarcodeDecoder {
   @override
   LicenseData decode(Map<String, String> fields) {
-    throw new UnimplementedError("Version 5 has not been implemented yet");
+    throw new FormatException("Version 5 has not been implemented yet");
   }
 }
 
 class BarcodeDecoderV6 extends BarcodeDecoder {
   @override
   LicenseData decode(Map<String, String> fields) {
-    throw new UnimplementedError("Version 6 has not been implemented yet");
+    throw new FormatException("Version 6 has not been implemented yet");
   }
 }
 
 class BarcodeDecoderV7 extends BarcodeDecoder {
   @override
   LicenseData decode(Map<String, String> fields) {
-    throw new UnimplementedError("Version 7 has not been implemented yet");
+    throw new FormatException("Version 7 has not been implemented yet");
   }
 }
 
 class BarcodeDecoderV8 extends BarcodeDecoder {
   @override
   LicenseData decode(Map<String, String> fields) {
-    throw new UnimplementedError("Version 8 has not been implemented yet");
+    throw new FormatException("Version 8 has not been implemented yet");
   }
 }
 
