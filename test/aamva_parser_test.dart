@@ -1,4 +1,5 @@
 import 'package:aamva_parser/aamva_parser.dart';
+import 'package:aamva_parser/barcode_decoder.dart';
 import 'package:aamva_parser/model/card_type.dart';
 import 'package:aamva_parser/model/height.dart';
 import 'package:aamva_parser/model/sex.dart';
@@ -172,6 +173,14 @@ void main() {
     expect(dl.cardType, CardType.DL);
     expect(dl.expiry, new DateTime(2017, 9, 14));
     expect(dl.issueDate, new DateTime(2012, 5, 24));
+  });
+
+  test("Should ignore case for height units", () {
+    // this is kind shitty since I'm trying to test the behaviour in the abstract class - grumble grumble composition over inheritance
+    var decoder = BarcodeDecoderV9();
+    var heightData = decoder.getHeightFromString("170 CM");
+    expect(heightData.heightUnit, HeightUnit.CM );
+    expect(heightData.height, 170);
   });
 
   test("Should scan a v9 ON License ", () {

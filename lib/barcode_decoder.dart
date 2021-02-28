@@ -12,9 +12,9 @@ abstract class BarcodeDecoder {
 
   Height getHeightFromString(String heightString) {
     var heightUnit;
-    if (heightString.substring(heightString.length - 2, heightString.length) == 'in') {
+    if (heightString.substring(heightString.length - 2, heightString.length)?.toLowerCase() == 'in') {
       heightUnit = HeightUnit.IN;
-    } else if (heightString.substring(heightString.length - 2, heightString.length) == 'cm') {
+    } else if (heightString.substring(heightString.length - 2, heightString.length)?.toLowerCase() == 'cm') {
       heightUnit = HeightUnit.CM;
     } else {
       throw new FormatException("Invalid height unit");
