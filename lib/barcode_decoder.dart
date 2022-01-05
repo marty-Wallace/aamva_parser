@@ -216,7 +216,7 @@ class BarcodeDecoderV9 extends BarcodeDecoder {
     checkCountry(country);
 
     var lastName = fields['DCS'].trim();
-    var middleName = fields['DAD'].trim();
+    var middleName = fields['DAD']?.trim() ?? '';
     var firstName = fields['DAC'].trim();
 
     if(fields['DDE'] == 'T') {
