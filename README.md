@@ -2,15 +2,10 @@
 
 Scans an AAMVA drivers license
 
-Working off of this python library: https://github.com/rechner/py-aamva
+Copying the implementation from this python library: https://github.com/rechner/py-aamva
 
-## Getting Started
+Note that this is only partially completed for _some_ versions of AAMVA barcodes and this has only been tested for _some_ provinces and states.
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+## Warning
+This code was hacked together in a day and isn't great, use at your own peril
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
